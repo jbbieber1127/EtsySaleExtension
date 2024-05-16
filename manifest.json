@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Etsy Sale Helper",
+  "description": "Gives the ability to create multiple sales at once within an Etsy shop",
+  "version": "1.0",
+  "action": {
+    "default_popup": "main.html",
+    "default_icon": "helper.png"
+  },
+  "content_scripts": [
+    {
+        "matches": ["https://www.etsy.com/your/shops/me/sales-discounts/step/createSale"],
+        "js": ["Scripts/CreateSalesScript.js"]
+    }
+  ],
+  "permissions": [
+    "cookies"
+  ],
+  "host_permissions": [
+    "https://www.etsy.com/"
+  ]
+}

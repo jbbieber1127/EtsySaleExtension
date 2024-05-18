@@ -40,12 +40,6 @@ function buildCreateSalesRequest(){
   }
 }
 
-function parseDateISOString(s) {
-  let ds = s.split(/\D/).map(s => parseInt(s));
-  ds[1] = ds[1] - 1; // adjust month
-  return new Date(...ds);
-}
-
 function sendCreateSalesRequest(createSalesRequest){
   (async () => {
     const [tab] = await chrome.tabs.query({url: salesPageUrl});
@@ -53,9 +47,7 @@ function sendCreateSalesRequest(createSalesRequest){
   })();
 }
 
-
-function setUpExtensionView() {
-  var startDatePicker = document.getElementById("startDatePicker");
+function showHideControls() {
   var divGoToSalesDashboard = document.getElementById("divGoToSalesDashboard");
   var divCreateSales = document.getElementById("divCreateSales");
   (async () => {
@@ -63,20 +55,6 @@ function setUpExtensionView() {
     if (tab.url == salesPageUrl) {
       divCreateSales.style["display"] = "block"
       divGoToSalesDashboard.style["display"] = "none"
-      
-      var today = new Date(new Date().toLocaleDateString());
-      var todayDatePicker = today.toJSON().slice(0, 10);
-      startDatePicker.min = todayDatePicker;
-
-      var tomorrow = new Date(new Date().toLocaleDateString());
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      var tomorrowDatePicker = tomorrow.toJSON().slice(0, 10);
-      startDatePicker.value = tomorrowDatePicker;
-
-      sixMonthsAhead = new Date(new Date().toLocaleDateString());
-      sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 6);
-      var sixMonthsAheadDatePicker = sixMonthsAhead.toJSON().slice(0, 10);
-      startDatePicker.max = sixMonthsAheadDatePicker;
     }
     else
     {
@@ -84,30 +62,53 @@ function setUpExtensionView() {
       divGoToSalesDashboard.style["display"] = "block"
     }
   })();
-  
+}
+
+function setUpDatePicker() {
+  var startDatePicker = document.getElementById("startDatePicker");
+  var today = new Date(new Date().toLocaleDateString());
+  var todayDatePicker = today.toJSON().slice(0, 10);
+  startDatePicker.min = todayDatePicker;
+
+  var tomorrow = new Date(new Date().toLocaleDateString());
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  var tomorrowDatePicker = tomorrow.toJSON().slice(0, 10);
+  startDatePicker.value = tomorrowDatePicker;
+
+  sixMonthsAhead = new Date(new Date().toLocaleDateString());
+  sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 6);
+  var sixMonthsAheadDatePicker = sixMonthsAhead.toJSON().slice(0, 10);
+  startDatePicker.max = sixMonthsAheadDatePicker;
+}
+
+function setUpExtensionView() {
+  showHideControls();
+  setUpDatePicker();
 }
 
 function handleBtnCreateSalesClick() {
   (async () => {
     const [tab] = await chrome.tabs.query({url: salesPageUrl});
     const response = await chrome.tabs.sendMessage(tab.id, {type: "getPageData"});
-    // do something with response here, not outside the function
-    console.log("response", response);
+    
     shopId = response.shopId;
     xCsrfToken = response.xCsrfToken;
     buildAndSendCreateSalesRequest();
   })();
 }
 
+function handleBtnGoToDashboardClick() {
+  (async () => {
+    await chrome.tabs.create({url: salesPageUrl, active: true});
+    showHideControls();
+  })();
+}
+
 /// Set up listeners for content script data
-
-
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     console.log("received message", request);
-    // if (request.greeting === "hello")
-    //   sendResponse({farewell: "goodbye"});
   }
 );
 
@@ -122,4 +123,8 @@ getSessionKeyWwwCookie();
 
 document.getElementById("btnCreateSales").onclick = () => {
   handleBtnCreateSalesClick();
+}
+
+document.getElementById("btnGoToDashboard").onclick = () => {
+  handleBtnGoToDashboardClick();
 }

@@ -1,22 +1,47 @@
 <html>
-  <body>
+  <body style="width: 275px;">
     <h1>Etsy Sale Helper</h1>
     <div id="divGoToSalesDashboard" style="display: block;">
-      <a href="https://www.etsy.com/your/shops/me/sales-discounts/step/createSale" target="_blank">Go to Sales Dashboard</a>
+      <input type="button" id="btnGoToDashboard" value="Go to Sales Page" />
+      <!-- <a href="https://www.etsy.com/your/shops/me/sales-discounts/step/createSale" target="_self">Go to Sales Dashboard</a> -->
     </div>
     <div id="divCreateSales" style="display: none;">
-      <label for="startDatePicker">Start date</label>
-      <input type="date" id="startDatePicker" name="start-date" />
-      <br />
-      <label for="nbrDaysPerSale"># Days Per Sale</label>
-      <input type="number" id="nbrDaysPerSale" name="nbrDaysPerSale" min="1" max="30" value="3">
-      <br />
-      <label for="nbrSales"># Sales</label>
-      <input type="number" id="nbrSales" name="nbrSales" min="1" max="50" value="10">
-      <br />
-      <label for="pctOff">% Off</label>
-      <input type="number" id="pctOff" name="pctOff" min="1" max="99" value="25">
-      <br />
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <label for="startDatePicker">Start date</label>
+            </td>
+            <td>
+              <input type="date" id="startDatePicker" name="start-date" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="nbrDaysPerSale"># Days Per Sale (1-30)</label>
+            </td>
+            <td>
+              <input type="number" id="nbrDaysPerSale" name="nbrDaysPerSale" min="1" max="30" value="3">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="nbrSales"># Sales (1-50)</label>
+            </td>
+            <td>
+              <input type="number" id="nbrSales" name="nbrSales" min="1" max="50" value="10">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="pctOff">% Off (1-99)</label>
+            </td>
+            <td>
+              <input type="number" id="pctOff" name="pctOff" min="1" max="99" value="25">
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <br />
       <input id="btnCreateSales" type="button" value="Create Sales" />
     </div>

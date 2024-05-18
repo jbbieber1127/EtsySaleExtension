@@ -69,10 +69,6 @@ function makeSaleName(secondSinceEpoch) {
 
 function createSale(shop_id, xCsrfToken, promotion_name, start_date, end_date, percent_discount) {
   var url = `https://www.etsy.com/api/v3/ajax/shop/${shop_id}/sales-coupons/create`;
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.setRequestHeader('x-csrf-token', xCsrfToken);
 
   var salesBody = {
     "promotion_type": "percent_discount_on_entire_order",
@@ -94,5 +90,21 @@ function createSale(shop_id, xCsrfToken, promotion_name, start_date, end_date, p
     "is_share_and_save": true
   };
 
-  xhr.send(JSON.stringify(salesBody));
+  fetch(
+    url,
+    {
+      method: 'post',
+      body: JSON.stringify(salesBody),
+      headers: new Headers({
+          'Content-Type': 'application/json',
+          'x-csrf-token': xCsrfToken
+        }) 
+    }
+  ).then((response) => {
+
+    }
+  ).catch((error) => {
+
+    }
+  );
 }

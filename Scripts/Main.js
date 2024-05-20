@@ -4,6 +4,7 @@ var uaidCookie;
 var sessionKeyWwwCookie;
 var xCsrfToken;
 var shopId;
+var currentlySavedSales;
 
 /// Set up helper functions
 
@@ -104,11 +105,18 @@ function handleBtnGoToDashboardClick() {
   })();
 }
 
+function saveSale(saveSaleRequest) {
+  currentlySavedSales.insert(saveSaleRequest);
+  chrome.storage.local.set({ "saveSalesRequests": currentlySavedSales });
+}
+
 /// Set up listeners for content script data
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    console.log("received message", request);
+    if (request.type === "saveSale") {
+      saveSale(request.saveSaleRequest);
+    }
   }
 );
 
@@ -117,6 +125,9 @@ chrome.runtime.onMessage.addListener(
 setUpExtensionView();
 getUaidCookie();
 getSessionKeyWwwCookie();
+chrome.storage.local.get(["saveSalesRequests"]).then((result) => {
+  currentlySavedSales = result.saveSalesRequests;
+});
 
 /// Respond to form commands
 

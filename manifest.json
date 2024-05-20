@@ -14,7 +14,8 @@
     }
   ],
   "permissions": [
-    "cookies"
+    "cookies",
+    "storage"
   ],
   "host_permissions": [
     "https://www.etsy.com/"

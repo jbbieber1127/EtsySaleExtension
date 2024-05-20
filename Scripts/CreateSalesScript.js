@@ -90,6 +90,8 @@ function createSale(shop_id, xCsrfToken, promotion_name, start_date, end_date, p
     "is_share_and_save": true
   };
 
+  var succeeded;
+  var promotion_id;
   fetch(
     url,
     {
@@ -101,10 +103,26 @@ function createSale(shop_id, xCsrfToken, promotion_name, start_date, end_date, p
         }) 
     }
   ).then((response) => {
-
+      succeeded = true;
+      promotion_id = response.promotion.promotion_id;
     }
   ).catch((error) => {
-
+      succeeded = false;
     }
-  );
+  ).finally(() => {
+    
+    (async () => {
+      await chrome.runtime.sendMessage({
+        type: "saveSale",
+        saveSaleRequest: {
+          succeeded,
+          percent_discount,
+          start_date,
+          end_date,
+          promotion_name,
+          promotion_id
+        }
+      });
+    })();
+  });
 }
